@@ -3,7 +3,13 @@ title: "Análise de Dados - UFPE/2019 - Lista 5"
 author: "Antonio Fernandes"
 date: "14 de maio de 2019"
 output: pdf_document
+  
 ---
+header-includes:
+  \renewcommand{\contentsname}{Conteúdo}
+  
+\tableofcontents 
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -12,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Apresentação
 Este documento apresenta as respostas dos exercícios realizados à mão presentes nas listas 1 e 2. Os scripts estão no repositório do GitHub.
 
-## Questão 5 - LISTA I
+## Questão 5 - Lista I
 
 Primeiramente foi criado o Dataframe com as informações necessárias:
 
@@ -120,12 +126,78 @@ Podemos perceber que a média de investimento básico acaba sendo menor do que a
 
 ##Questão 7 - Lista I
 
-## Including Plots
+Primeiro, vamos criar o banco de dados contendo as informações dos estímulos visuais:
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+Est <- data.frame("IND" = 1:20, "A" = c(55,2,13,11,23,2,15,12,14,28,12,45,19,30,16,12,7,13,1,7),
+                  "B" =  c(20,7,6,5,3,25,5,3,3,10,8,5,1,35,9,8,12,2,26,NA))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+O próximo passo é obter as estatísticas descritivas do banco:
+
+```{r}
+mean(Est$A) ##Media estimulo A = 16.85
+mean(Est$B, na.rm = TRUE) ##Media estimulo B = 10.16
+
+median(Est$A) ##Mediana estimulo A = 13
+median(Est$B, na.rm = TRUE) ##Mediana estimulo B  = 7
+
+sd(Est$A) ##Desvio padrao estimulo A = 13.80
+sd(Est$B, na.rm = TRUE) ##Desvio padrao estimulo B = 9.45
+```
+
+Os resultados mostram que a média do tempo de reação do estímulo A é maior do que a média de reação do estímulo B. Do mesmo modo, a média do estímulo A é 13 enquanto que em relação ao estímulo B esse valor é de 7. Ao analisar o desvio padrão dos dois estímulos, o desvio padrão do estímulo A é de 13.80 enquanto que o do estímulo B é de 9.45, sendo possível inferir que o estímulo B possui uma menor variação no tempo de resposta.
+
+Por fim, é possível observamos a distribuição das variáveis por meio de um boxplot:
+
+```{r, echo=FALSE}
+boxplot(Est$A, Est$B)
+```
+
+Podemos visualizar que ambas as distribuições apresentam alguns valores destoantes, que no estímulo A estão acima de 40 (55 e 45) e no estímulo B estão acima de 20 (35,26 e 25). 
+
+
+##Questão 8 - Lista I
+
+Na questão 8, também precisamos iniciar criando o banco de dados para realizar as análises:
+
+```{r}
+fam <- data.frame("FAM" = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J"), "REN" = 
+                    c(12,16,18,20,28,30,40,48,50,54), "SAU" = c(7.2,7.4,7,6.5,6.6,6.7,6,5.6,6,5.5))
+```
+
+Após isso, podemos obter as informações solicitadas:
+
+```{r}
+mean(fam$REN) #Media renda familia 
+mean(fam$SAU) #Media percentual gasto com saude 
+
+sd(fam$REN) #sd renda familia 
+sd(fam$SAU) #sd percentual gasto com saude 
+
+cov(fam$REN, fam$SAU) #cov entre as duas variaveis
+
+cor(fam$REN, fam$SAU) #correlacao entre as duas variaveis
+```
+
+Os resultados mostram que a média de renda da família é de 31.6 e a média do gasto percentual com saúde é de 6.45. Já em relação ao desvio padrão, o valor obtido em relação a renda da família foi de 15.42 e o gasto percentual com saúde foi de 0.66. A covariância entre as duas variáveis foi -9.53 e a correlação foi de -0.94.
+
+Ou seja, a correlação mostrou uma relação inversamente proporcional entre as duas variáveis, indicando que o aumento de uma leva a queda da outra. Além disso, o valor obtido muito próximo de 1 mostra que o grau de associação entre as variáveis é forte.
+
+##Questão 9 - Lista I
+
+Na questão 9, primeiro será criado um banco contendo as informações dos alunos:
+
+```{r}
+not <- data.frame("ALU" = c("A", "B", "C", "D", "E", "F", "G", "H", "I"), "PI" = 
+                    c(7.5,8.2,8.5,8.7,8.8,9.1,9.2,9.3,10), "P2" = c(8.2, 8,8.3,
+                                                                    8.5,9.4,9.6,9,9.3,9.7))
+```
+
+Com isso, podemos realizar uma análise de correlação entre as notas da prova I e as notas da prova II:
+
+```{r}
+cor(not$PI, not$P2)
+```
+
+O valor obtido na correlação de 0.83 indica uma associação forte entre as variáveis, mostrnado que estas estão altamente correlacionadas. Ou seja, uma nota alta na prova I indica uma nota alta também na prova II.

@@ -113,3 +113,5 @@ cor(not$PI, not$P2) ##correlacao entre as duas variaveis = 0.83
 
 
 
+
+
