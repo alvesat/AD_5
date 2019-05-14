@@ -3,10 +3,9 @@ title: "Análise de Dados - UFPE/2019 - Lista 5"
 author: "Antonio Fernandes"
 date: "14 de maio de 2019"
 output: pdf_document
-  
+
 ---
-header-includes:
-  \renewcommand{\contentsname}{Conteúdo}
+\renewcommand{\contentsname}{Conteúdo}
   
 \tableofcontents 
 
@@ -20,7 +19,7 @@ Este documento apresenta as respostas dos exercícios realizados à mão present
 
 ## Questão 5 - Lista I
 
-Primeiramente foi criado o Dataframe com as informações necessárias:
+Primeiramente foi criado o *Data frame* com as informações necessárias:
 
 ```{r}
 Emp <- data.frame("EMP" = 1:15, "MES" = c(8,9,4,5,3,6,8,6,6,8,5,5,6,4,4), 
@@ -201,3 +200,182 @@ cor(not$PI, not$P2)
 ```
 
 O valor obtido na correlação de 0.83 indica uma associação forte entre as variáveis, mostrnado que estas estão altamente correlacionadas. Ou seja, uma nota alta na prova I indica uma nota alta também na prova II.
+
+##Questão 5 - Lista II
+
+Primeiramente, vamos criar um banco com 1000 casos e atribuir valor 1 até 620 (os respondentes que não votaram) e 0 para os 380 casos restantes.
+
+```{r}
+Banco <- data.frame("RES" = 1:1000) 
+
+Banco$valor <- ifelse(Banco$RES <= 620, 1, 0) ##Até 620 atribuir valor 1 e depois valor 0
+```
+
+Agora podemos obter o valor da média e desvio padrão da amostra
+
+```{r}
+mean(Banco$valor) 
+
+sd(Banco$valor)
+```
+
+Para estimar a média populacional com um I.C de 95%, vamos obter o valor Z
+
+```{r}
+error <- qnorm(0.975) 
+```
+
+Com isso, é possível calcular o valor minimo e máximo do I.C onde está a média da população
+
+```{r}
+0.62 + (error*0.486/sqrt(1000)) ##Valor máximo dentro do IC de 95
+0.62 - (error*0.486/sqrt(1000)) ##Valor minimo dentro do IC de 95
+```
+
+##Questão 6 - Lista II
+
+(a) Para obter a quantidade de eleitores que devem ser consultados com um erro de 0.05 e probaiblidade de 0.95 e p de 0.05 fazemos o seguinte:
+
+```{r}
+Zs <- 1.96^2 ##Calculando Z ao quadrado
+E <- 0.05^2  ##Calculando erro ao quadrado
+
+0.5*(1-0.5) ##Executando parte da fórmula para obter valor final com p
+
+n <- Zs* 0.25/E ##Obtendo o valor de N com erro de 0.05
+
+print(n)
+```
+
+Ou seja, precisamos de aproximadamente 385 respondentes
+
+(b) Com um erro menor (0.02) fazemos o seguinte:
+
+```{r}
+E <- 0.02^2 ##Caclulando erro ao quadro de 0.02
+
+n <- Zs* 0.25/E ##Obtendo o valor de N com erro de 0.02
+
+print(n)
+
+```
+
+Com um erro menor, o n amostral aumenta, sendo necessário 2401 respondentes.
+
+(c) Com a informação de que um candidato pode ter 25% dos votos, podemos reduzir o tamanho da amostra necessária:
+
+```{r}
+0.25*(1-0.25) ##Executando parte da fórmula para obter valor final com p
+
+n <- Zs* 0.1875/E ##Obtendo o valor de N com erro de 0.02 e informação de 25% dos eleitores
+
+print(n)
+
+```
+Com essa informação, podemos reduzir o tamanho da amostra para 1801 respondentes. Isso se deve ao fato de termos um valor da população já conhecido (25%)
+
+(d) Sabendo que 564 respondentes de acordo com a amostra obtida em (b) votaram no partido conservador, podemos obter o I.C a 95% de confiança executando o seguinte comando:
+
+```{r, results= 'hide'}
+Banco <- data.frame("Elet" = 1:2401) ##Criando o banco
+
+Banco$valor <- ifelse(Banco$Elet <= 564, 1, 0) ##Até 564 atribuir valor 1 e depois valor 0
+
+mean(Banco$valor) ##media
+sd(Banco$valor) ##Desvio padrao
+
+error <- qnorm(0.975) ##identificando valor Z para 95%
+```
+
+```{r}
+0.235 + (error*0.424/sqrt(2401)) 
+##Valor máximo dentro do IC de 95
+0.235 - (error*0.424/sqrt(2401)) 
+##Valor minimo dentro do IC de 95
+```
+
+##Questão 11 - Lista II
+
+Nesta questão, podemos formular as seguintes hipóteses nula e alternativa:
+
+*H0*: Não há associação entre ideologia e voto do parlamentar no tema;
+
+*H1*: Há associação entre ideologia e voto do parlamentar no tema
+
+Para efetuar o teste de hipóteses, vamos criar uma matriz de dados contento a quantidade de votos de acordo com a posição do parlamentar em relação ao tema e a ideologia do partido do qual o parlamentar faz parte:
+
+```{r}
+droga <- matrix(cbind(c(450,100),c(150,300)), nrow = 2, 
+                dimnames = list(c("FAV","CONT"), c("ESQ","DIR"))) 
+
+options(scipen=999) ##desativando a função de notação científica no output 
+
+```
+
+Com a matriz criada, podemos efetuar o teste de qui-quadrado para testar as hipóteses:
+
+```{r}
+chisq.test(droga)
+```
+
+Como é possível verificar nos resultados, o valor do X obtido foi de 240 com um *p-valor* menor que 0.05. Ou seja, podemos rejeitar a hipótese nula apresentada e considerar que há uma relação entre a ideologia e o voto do parlamentar no tema.
+
+##Questão 12 - Lista II
+
+Na questão 12, também precisamos inicialmente elaborar as duas hipóteses para realizarmos o teste T:
+
+*H0*: Taxa média de reeleição dos parlamentares foi a mesma antes e depois do *Watergate scandal*;
+
+*H1*: Taxa média de reeleição dos parlamentares  não foi a mesma antes e depois do *Watergate scandal*
+
+Agora criamos um *Data frame* com as informações da questão:
+
+```{r}
+election <- data.frame("YEAR" = seq(from = 1964, to = 2006, by = 2 ), "HOUSE" = 
+                    c(87,88,97,85,94,88,96,94,91,90,95,98,98,96,88,90,94,98,98,96,98,94), 
+                    "SEN" = c(85,88,71,77,74,85,64,60,55,93,90,75,85,96,83,92,91,90,79,86,96,79)) 
+```
+
+E criamos uma variável atribuindo um valor 0 e 1 para antes e depois do escândalo:
+
+```{r}
+election$SCANDAL <- ifelse(election$YEAR <= 1972, 0,1)
+```
+
+Com isso, podemos fazer o teste T para as duas casas do congresso americano comparando antes e depois:
+
+```{r}
+t.test(election$HOUSE ~ election$SCANDAL) 
+##teste t comparando antes e depois do escândalo para a câmara
+
+t.test(election$SEN ~ election$SCANDAL) 
+##teste t comparando antes e depois do escândalo para o senado
+```
+
+Ao verificarmos o p-valor em ambos os testes, verificamos que estes são maiores que 0.05. Ou seja, não é possível rejeitar a hipótese nula de que a taxa média de reeleição foi a mesma tanto antes quanto depois do escândalo.
+
+##Questão 13 - Lista II
+
+Na questão 13, podemos apresentar as seguintes hipóteses:
+
+*H0*: Não há associação entre as variáveis PIB e Votos;
+
+*H1*: Há associação entre as variáveis PIB e Votos.
+
+Para testar essas hipóteses, vamos criar o banco com as informações necessárias:
+
+```{r}
+vote <- data.frame("YEAR" = seq(from = 1876, to = 1932, by = 4 ), 
+                   "GROWTH" =  c(5.11,3.879,1.589,-5.553, 2.763,-10.024,-1.425,-2.421,
+                                 -6.281,4.164, 2.229,-11.463,-3.872,4.623, -14.586), 
+                   "VOTES" = c(48.516,50.22,49.846,50.414,48.268,47.76,53.171,
+                               60.006,54.483,54.708,51.682,36.148,58.263,58.756,40.851))
+```
+
+Com o *Data frame* criado, podemos então efetuar o teste de correlação:
+
+```{r}
+cor.test(vote$GROWTH, vote$VOTES)
+```
+
+O resultado do teste de correlação mostra que existe uma associação entre as variáveis com força média e significativa (p-valor < 0.05). Ao comparamos com a série histórica maior, veiricamos que a associação entre as variáveis persiste e também é estatisticamente significativa.

@@ -111,7 +111,96 @@ not <- data.frame("ALU" = c("A", "B", "C", "D", "E", "F", "G", "H", "I"), "PI" =
 cor(not$PI, not$P2) ##correlacao entre as duas variaveis = 0.83
 
 
+##QUESTÃO 5 - LISTA II
+
+Banco <- data.frame("RES" = 1:1000) ##Criando o banco
+
+Banco$valor <- ifelse(Banco$RES <= 620, 1, 0) ##Até 620 atribuir valor 1 e depois valor 0
+
+mean(Banco$valor) ## média
+
+sd(Banco$valor) ##desvio padrão
+
+error <- qnorm(0.975) ##identificando valor Z para 95%
+
+0.62 + (error*0.486/sqrt(1000)) ##Valor máximo dentro do IC de 95
+0.62 - (error*0.486/sqrt(1000)) ##Valor minimo dentro do IC de 95
+
+##QUESTÃO 6 - LISTA II
+
+###Letra a
+
+Zs <- 1.96^2 ##Colocando Z ao quadrado
+E <- 0.05^2  ##Calculando erro ao quadrado
+
+0.5*(1-0.5) ##Executando parte da fórmula para obter valor final com p
+
+n <- Zs* 0.25/E ##Obtendo o valor de N com erro de 0.05
 
 
+##Letra b
+
+E <- 0.02^2 ##Caclulando erro ao quadro de 0.02
+
+n <- Zs* 0.25/E ##Obtendo o valor de N com erro de 0.02
+
+
+##Letra c
+
+0.25*(1-0.25) ##Executando parte da fórmula para obter valor final com p
+
+n <- Zs* 0.1875/E ##Obtendo o valor de N com erro de 0.02 e informação de 25% dos eleitores
+
+##Letra d
+
+Banco <- data.frame("Elet" = 1:2401) ##Criando o banco
+
+Banco$valor <- ifelse(Banco$Elet <= 564, 1, 0) ##Até 564 atribuir valor 1 e depois valor 0
+
+mean(Banco$valor) ##media
+sd(Banco$valor) ##Desvio padrao
+
+error <- qnorm(0.975) ##identificando valor Z para 95%
+
+0.235 + (error*0.424/sqrt(2401)) ##Valor máximo dentro do IC de 95
+0.235 - (error*0.424/sqrt(2401)) ##Valor minimo dentro do IC de 95
+
+###QUESTÃO 11 - LISTA II
+
+droga <- matrix(cbind(c(450,100),c(150,300)), nrow = 2, 
+                dimnames = list(c("FAV","CONT"), c("ESQ","DIR"))) ##Criando matriz com as informações
+
+options(scipen=999)
+
+chisq.test(droga) ##executando o teste qui-quadrado
+
+##Nesse caso, podemos rejeitar a hipótese nula de que não há associação entre ideologia e o voto
+
+
+
+
+###QUESTÃO 12 - LISTA II
+
+election <- data.frame("YEAR" = seq(from = 1964, to = 2006, by = 2 ), "HOUSE" = 
+                    c(87,88,97,85,94,88,96,94,91,90,95,98,98,96,88,90,94,98,98,96,98,94), 
+                    "SEN" = c(85,88,71,77,74,85,64,60,55,93,90,75,85,96,83,92,91,90,79,86,96,79)) ##Criando banco
+
+election$SCANDAL <- ifelse(election$YEAR <= 1972, 0,1) ##Criano variável do escândalo
+
+t.test(election$HOUSE ~ election$SCANDAL) ##teste t comparando antes e depois do escândalo para a câmara
+
+t.test(election$SEN ~ election$SCANDAL) ##teste t comparando antes e depois do escândalo para o senado
+
+##Nesse caso, não é possível rejeitar a hipóse nula de que não há diferença entre o período 
+##antes e depois do escândalo. 
+
+
+###QUESTÃO 13 - LISTA II
+
+vote <- data.frame("YEAR" = seq(from = 1876, to = 1932, by = 4 ), "GROWTH" = 
+                         c(5.11,3.879,1.589,-5.553, 2.763,-10.024,-1.425,-2.421,-6.281,4.164,2.229,-11.463,-3.872,4.623, -14.586), 
+                       "VOTES" = c(48.516,50.22,49.846,50.414,48.268,47.76,53.171,60.006,54.483,54.708,51.682,36.148,58.263,58.756,40.851)) ##Criando banco
+
+cor.test(vote$GROWTH, vote$VOTES) ##correlação entre votos e crescimento
 
 
