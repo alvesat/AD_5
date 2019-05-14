@@ -1,0 +1,131 @@
+---
+title: "Análise de Dados - UFPE/2019 - Lista 5"
+author: "Antonio Fernandes"
+date: "14 de maio de 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Apresentação
+Este documento apresenta as respostas dos exercícios realizados à mão presentes nas listas 1 e 2. Os scripts estão no repositório do GitHub.
+
+## Questão 5 - LISTA I
+
+Primeiramente foi criado o Dataframe com as informações necessárias:
+
+```{r}
+Emp <- data.frame("EMP" = 1:15, "MES" = c(8,9,4,5,3,6,8,6,6,8,5,5,6,4,4), 
+                  "SET" = c('C','C','I','I','I','C','C','I','I','C','C','I','C','I','I'), 
+                  "TAM" = c('G','M','G','M','M','P','G','M','P','M','P','P','M','M','G'))
+```
+
+Após isso, o banco foi dividido entre Comércio e Indústria:
+
+```{r}
+C <- Emp[ which(Emp$SET == "C"),]
+I <- Emp[ which(Emp$SET == "I"),]
+```
+
+Em seguida, foram calculadas a média, moda e mediana de cada setor:
+
+```{r}
+#Media e mediana de cada grupo
+
+mean(C$MES) 
+mean(I$MES) 
+
+median(C$MES)
+median(I$MES)
+
+  #Desvio Padrão de cada grupo
+
+sd(C$MES) 
+sd(I$MES) 
+
+```
+
+Onde percebe-se que a média, mediana e desvio padrão dos meses com crescimento é maior no comércio. 
+
+O próximo passo é indentificar o número máximo de meses com crescimento para a empresa receber um incentivo fiscal. Nesse caso, serão as empresas com meses menores que o 25 decil:
+
+```{r}
+fivenum(Emp$MES) 
+```
+
+Nesse caso, o máximo é 4.5 meses. Por fim, é necessário verificar as estatísticas descritivas de acordo com o porte da empresa:
+
+```{r}
+G <- Emp[ which(Emp$TAM == "G"),]  ##Tamanho grande
+M <- Emp[ which(Emp$TAM == "M"),]  ##Tamanho médio
+P <- Emp[ which(Emp$TAM == "P"),]  ##Tamanho pequeno
+
+median(G$MES) 
+median(M$MES) 
+median(P$MES) 
+
+mean(G$MES) 
+mean(M$MES) 
+mean(P$MES) 
+
+sd(G$MES) 
+sd(M$MES) 
+sd(P$MES) 
+
+
+```
+
+A mediana de meses com crescimento é a mesma para empresas de grande e médio porte (6) e um pouco menor para empresas de pequeno porte (5.5). Já em relação a média, as empresas de grande porte apresentam uma quantidade de meses com crescimento um pouco maior que as empresas de médio e pequeno porte. Do mesmo modo, no tocante ao desvio padrão, as empresas grandes apresentam uma maior variação nos meses com crescimento do que as empresas de médio e pequeno porte.
+
+##Questão 6 - Lista I
+
+Primeiramente é utilizado o comando `data.frame` para criar um data frame contendo as informações necessárias:
+
+```{r}
+Inv <- data.frame("CID" = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J"),
+                  "INV" = c(26,16, 14,10, 19, 15, 19, 16, 19, 18))
+```
+
+O cálculo do investimento médio ocorre da segunite maneira:
+
+```{r}
+mean(Inv$INV)
+```
+Ou seja, o investimento médio é de 17.2
+
+Agora será calculado quais cidades receberão o programa especial:
+
+```{r}
+s <- sd(Inv$INV) 
+
+mean(Inv$INV) - (2*s) ##Identificando valor para programa especial 
+```
+Cidades com menos de 8.83 em investimentos receberão o programa especial. Agora, será verificado qual o valor minimo e máximo de investimento básico e quais cidades estão neste critério.
+
+```{r}
+
+mean(Inv$INV) - (2*s) #Valor minimo investimento básico
+mean(Inv$INV) + (2*s) #Valor maximo investimento basico
+
+
+invba <- Inv[ which(Inv$INV < 25.56 
+                         & Inv$INV > 8.83), ] #Selecionando casos com investimento básico
+
+mean(invba$INV) #media investimento basico
+```
+
+Podemos perceber que a média de investimento básico acaba sendo menor do que a média de investimento total (16.22 < 17.2).
+
+##Questão 7 - Lista I
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
